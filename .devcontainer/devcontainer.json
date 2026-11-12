@@ -11,8 +11,7 @@
   },
 
   "features": {
-    "ghcr.io/devcontainers/features/aws-cli:1": {},
-    "ghcr.io/devcontainers/features/node:1": {}
+    "ghcr.io/devcontainers/features/aws-cli:1": {}
   },
 
   // Point AWS CLI at Floci by default so you don't need --endpoint-url every time

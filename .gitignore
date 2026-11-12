@@ -1,0 +1,8 @@
+.venv
+push.sh
+project_snapshot.txt
+.vscode
+pack.sh
+
+floci-data/**
+!floci-data/.gitkeep

@@ -1,0 +1,17 @@
+services:
+  floci-dash:
+    image: ghcr.io/ofsazib/floci-dash:latest-combined
+    container_name: floci-dash
+    restart: unless-stopped
+    ports:
+      - "3000:3000"      # Dashboard
+      - "4566:4566"      # Floci API endpoint
+    volumes:
+      - floci-data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - FLOCI_HOSTNAME=floci-dash
+      - FLOCI_STORAGE_MODE=hybrid
+      - FLOCI_STORAGE_PERSISTENT_PATH=/app/data
+volumes:
+  floci-data:

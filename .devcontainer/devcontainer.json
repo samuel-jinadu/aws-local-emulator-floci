@@ -1,33 +1,16 @@
 {
-  "name": "Floci-Dash (Combined)",
-  "dockerComposeFile": "../compose.yaml",
-  "service": "floci-dash",
-  "workspaceFolder": "/app",
-  "shutdownAction": "stopCompose",
-  "forwardPorts": [3000, 4566],
-  "portsAttributes": {
-    "3000": { "label": "Dashboard" },
-    "4566": { "label": "Floci API" }
-  },
-
-  "features": {
-    "ghcr.io/devcontainers/features/aws-cli:1": {}
-  },
-
-  // Point AWS CLI at Floci by default so you don't need --endpoint-url every time
-  "containerEnv": {
-    "AWS_ENDPOINT_URL": "http://localhost:4566",
-    "AWS_ACCESS_KEY_ID": "test",
-    "AWS_SECRET_ACCESS_KEY": "test",
-    "AWS_DEFAULT_REGION": "us-east-1",
-    "AWS_PAGER": ""
-  },
-
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "ms-azuretools.vscode-docker"
-      ]
-    }
-  }
+	"name": "AWS Local - Floci",
+	"image": "mcr.microsoft.com/devcontainers/base:trixie",
+	"runArgs": [
+		"--privileged",
+		"--device",
+		"/dev/kvm"
+	],
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"enableNonRootDocker": "true",
+			"moby": "false"
+		},
+		"ghcr.io/devcontainers/features/aws-cli:1": {}
+	}
 }

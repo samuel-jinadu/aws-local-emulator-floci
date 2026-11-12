@@ -10,10 +10,11 @@ services:
     ports:
       - "3000:3000"                # Dashboard
       - "4566:4566"                # Floci API
-      - "9400-9499:9400-9499"      # OpenSearch proxy ports (optional but recommended)
+      - "9400-9499:9400-9499"
     volumes:
-      - floci-data:/app/data       # Floci persistent storage
-      - floci-docker:/var/lib/docker   # <-- CRITICAL: Docker daemon storage
+      - floci-data:/app/data   
+      - floci-docker:/var/lib/docker   
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - FLOCI_HOSTNAME=floci-dash
       - FLOCI_STORAGE_MODE=hybrid

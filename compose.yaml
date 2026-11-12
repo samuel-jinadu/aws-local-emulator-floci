@@ -1,32 +1,35 @@
 services:
-  floci-dash:
-    image: ghcr.io/ofsazib/floci-dash:latest-combined
-    container_name: floci-dash
+  floci:
+    image: floci/floci:latest
+    container_name: floci
     restart: unless-stopped
     privileged: true
-    init: true
-    security_opt:
-      - seccomp:unconfined
     ports:
-      - "3000:3000"                # Dashboard
-      - "4566:4566"                # Floci API
-      - "9400-9499:9400-9499"
+      - "4566:4566"
     volumes:
-      - floci-data:/app/data   
-      - floci-docker:/var/lib/docker   
+      - floci-data:/app/data
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - FLOCI_HOSTNAME=floci-dash
       - FLOCI_STORAGE_MODE=hybrid
       - FLOCI_STORAGE_PERSISTENT_PATH=/app/data
-      - FLOCI_SERVICES_OPENSEARCH_MOCK=false   # set to true if you don't need real OpenSearch
-      - FLOCI_SERVICES_OPENSEARCH_PROXY_BASE_PORT=9400
-      - FLOCI_SERVICES_OPENSEARCH_PROXY_MAX_PORT=9499
-      - QUARKUS_HTTP_HOST=0.0.0.0          # <-- ADD THIS
-      - FLOCI_URL=http://localhost:4566
-      - FLOCI_SECURITY_ALLOW_UNSAFE_NETWORK_EXPOSURE=true
-      # - FLOCI_RUN_AS_ROOT=true
+      - FLOCI_HOSTNAME=floci
+      - QUARKUS_HTTP_HOST=0.0.0.0
+      - FLOCI_SECURITY_ALLOW_UNSAFE_NETWORK_EXPOSURE=true 
+      - FLOCI_SERVICES_EC2_ENABLED=true
+      - FLOCI_SERVICES_LAMBDA_ENABLED=true
+      - FLOCI_SERVICES_RDS_ENABLED=true
+
+  floci-dash:
+    image: ghcr.io/ofsazib/floci-dash:latest
+    container_name: floci-dash
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - AWS_ENDPOINT_URL=http://floci:4566      
+      - FLOCI_URL=http://floci:4566  
+    depends_on:
+      - floci
 
 volumes:
   floci-data:
-  floci-docker:   # <-- ADD THIS

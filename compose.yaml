@@ -3,15 +3,29 @@ services:
     image: ghcr.io/ofsazib/floci-dash:latest-combined
     container_name: floci-dash
     restart: unless-stopped
+    privileged: true
+    init: true
+    security_opt:
+      - seccomp:unconfined
     ports:
-      - "3000:3000"      # Dashboard
-      - "4566:4566"      # Floci API endpoint
+      - "3000:3000"                # Dashboard
+      - "4566:4566"                # Floci API
+      - "9400-9499:9400-9499"      # OpenSearch proxy ports (optional but recommended)
     volumes:
-      - floci-data:/app/data
-      - /var/run/docker.sock:/var/run/docker.sock
+      - floci-data:/app/data       # Floci persistent storage
+      - floci-docker:/var/lib/docker   # <-- CRITICAL: Docker daemon storage
     environment:
       - FLOCI_HOSTNAME=floci-dash
       - FLOCI_STORAGE_MODE=hybrid
       - FLOCI_STORAGE_PERSISTENT_PATH=/app/data
+      - FLOCI_SERVICES_OPENSEARCH_MOCK=false   # set to true if you don't need real OpenSearch
+      - FLOCI_SERVICES_OPENSEARCH_PROXY_BASE_PORT=9400
+      - FLOCI_SERVICES_OPENSEARCH_PROXY_MAX_PORT=9499
+      - QUARKUS_HTTP_HOST=0.0.0.0          # <-- ADD THIS
+      - FLOCI_URL=http://localhost:4566
+      - FLOCI_SECURITY_ALLOW_UNSAFE_NETWORK_EXPOSURE=true
+      # - FLOCI_RUN_AS_ROOT=true
+
 volumes:
   floci-data:
+  floci-docker:   # <-- ADD THIS
